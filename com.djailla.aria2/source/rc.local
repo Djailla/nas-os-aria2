@@ -1,0 +1,49 @@
+#!/bin/sh -e
+#
+# rc.local
+#
+
+export WEBUI_PORT="$RAINBOW_PORT_WEB_UI"
+export ARIA2_URL="$RAINBOW_WEB_PATH"
+
+SESSION_FILE="/data/cache/session.txt"
+DOWNLOAD_DIR="/data/downloads"
+
+D_PROG=/usr/bin/aria2c
+D_ARGS="--enable-rpc --rpc-listen-all --save-session=$SESSION_FILE -i$SESSION_FILE -x16 -k1M --dir=$DOWNLOAD_DIR"
+D_PIDFILE=/var/run/aria2c.pid
+
+WEB_DIR=/www
+WEB_PROG=/www/webui-server.py
+WEB_ARGS="$WEBUI_PORT"
+WEB_PIDFILE=/var/run/webui-server.pid
+
+ARIA2_USER="rainbow"
+ARIA2_UMASK="000"
+
+case "$1" in
+  start)
+        #echo "Starting app"
+        mkdir -p $(dirname $SESSION_FILE)
+        mkdir -p $DOWNLOAD_DIR
+        touch $SESSION_FILE
+
+        start-stop-daemon --start \
+                        --make-pidfile --pidfile $D_PIDFILE \
+                        --background --chdir "$DOWNLOAD_DIR" \
+                        -k $ARIA2_UMASK \
+                        --startas $D_PROG -- $D_ARGS
+        start-stop-daemon --start \
+                        --make-pidfile --pidfile $WEB_PIDFILE \
+                        --background --chdir "$WEB_DIR" \
+                        --startas $WEB_PROG -- $WEB_ARGS
+        ;;
+  stop)
+        #echo "Stopping app"
+        start-stop-daemon --stop --pidfile $D_PIDFILE
+        rm $D_PIDFILE
+        start-stop-daemon --stop --pidfile $WEB_PIDFILE
+        ;;
+esac
+
+exit 0

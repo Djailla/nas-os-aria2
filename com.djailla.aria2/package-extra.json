@@ -1,0 +1,14 @@
+{
+    "name": {
+        "en": "Aria2 Downloader"
+    },
+    "description_short": {
+        "en": "Aria2 Downloader App."
+    },
+    "supported_languages": [
+        "en"
+    ],
+    "publisher_name": "Djailla",
+    "publisher_contact": "bastien.vallet@gmail.com",
+    "website_url": "https://github.com/Djailla/nas-os-aria2/"
+}

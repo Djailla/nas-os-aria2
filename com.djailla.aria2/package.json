@@ -1,0 +1,12 @@
+{
+    "type": "application",
+    "id": "com.djailla.aria2",
+    "version": "1.0.0",
+    "depends": [
+        "org.debian.jessie-1.0"
+    ],
+    "network_ports": {
+        "WEB_UI": 6799,
+        "ARIA2_RPC": 6800
+    }
+}
